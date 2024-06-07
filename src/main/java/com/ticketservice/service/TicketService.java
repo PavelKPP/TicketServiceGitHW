@@ -54,4 +54,12 @@ public class TicketService {
         ticketsStorage.put(ticket10.getId(), ticket10);
     }
 
+    public Ticket findById(String idOfTheTicket) {
+        if (ticketsStorage.containsKey(idOfTheTicket)) {
+            return ticketsStorage.get(idOfTheTicket);
+        } else {
+            throw new IllegalArgumentException("Ticket with such id not found");
+        }
+    }
+
 }
