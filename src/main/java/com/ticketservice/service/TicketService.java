@@ -7,11 +7,19 @@ import java.math.RoundingMode;
 import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TicketService {
+
+    private final Map<Long, Ticket> tickets;
+
+    public TicketService() {
+        this.tickets = new HashMap<>();
+    }
+
     public static void main(String[] args) {
+        TicketService ticketService = new TicketService();
         Ticket emptyTicketUsingConstructor = new Ticket();
         System.out.println("[empty ticket using constructor]: " + emptyTicketUsingConstructor);
 
@@ -37,5 +45,23 @@ public class TicketService {
         fullTicketUsingSetters.setStadiumSector('A');
         fullTicketUsingSetters.setMaxBackpackWeight(9.99);
         fullTicketUsingSetters.setPrice(new BigDecimal(5.99));
+
+        ticketService.save(emptyTicketUsingConstructor);
+        ticketService.save(limitedTicketUsingSetters);
+        ticketService.save(fullTicketUsingConstructor);
+
+        System.out.println("Search result: " + ticketService.findByStadiumSector('B'));
+    }
+
+    public Long save(Ticket ticket) {
+        tickets.put(ticket.getId(),ticket);
+        return ticket.getId();
+    }
+
+    public List<Ticket> findByStadiumSector(char stadiumSector) {
+        return tickets.values()
+                .stream()
+                .filter(ticket -> ticket.getStadiumSector() == stadiumSector)
+                .collect(Collectors.toList());
     }
 }
